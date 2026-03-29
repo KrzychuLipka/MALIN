@@ -1,6 +1,6 @@
 package pl.lipov.malin.domain.model
 
-data class Beacon(
+data class ReferenceBeacon(
     val uid: String,
     val name: String,
     val longitude: Double,

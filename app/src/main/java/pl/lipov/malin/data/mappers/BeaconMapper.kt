@@ -1,9 +1,9 @@
 package pl.lipov.malin.data.mappers
 
 import pl.lipov.malin.data.dto.BeaconDto
-import pl.lipov.malin.domain.model.Beacon
+import pl.lipov.malin.domain.model.ReferenceBeacon
 
-fun BeaconDto.toDomain() = Beacon(
+fun BeaconDto.toDomain() = ReferenceBeacon(
     uid = uid,
     name = name,
     longitude = longitude,
