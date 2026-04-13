@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.serialization)
 }
 
 android {
@@ -49,7 +48,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.bluetooth)
     implementation(libs.android.beacon.library)
     implementation(libs.play.services.code.scanner)
