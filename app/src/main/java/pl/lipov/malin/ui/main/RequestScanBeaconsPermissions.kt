@@ -62,6 +62,8 @@ fun RequestScanBeaconsPermissions(
     LaunchedEffect(allGranted) {
         if (!allGranted) {
             launcher.launch(permissions.toTypedArray())
+        } else {
+            onPermissionsGranted()
         }
     }
 }
