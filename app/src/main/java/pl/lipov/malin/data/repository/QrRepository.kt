@@ -1,6 +1,7 @@
 package pl.lipov.malin.data.repository
 
 import pl.lipov.malin.common.ResultState
+import pl.lipov.malin.domain.model.Position
 import pl.lipov.malin.domain.repository.QrApi
 
 class QrRepository(
@@ -13,14 +14,14 @@ class QrRepository(
 
     suspend fun getPosition(
         qrText: String
-    ): ResultState<Pair<Double, Double>> {
+    ): ResultState<Position> {
         return try {
             val response = api.getQrData(filter = "$QR_KEY='$qrText'")
             val geometry = response.features.firstOrNull()?.geometry
             if (geometry == null) {
                 ResultState.Error(Throwable("Geometry not found."))
             } else {
-                ResultState.Success(geometry.x to geometry.y)
+                ResultState.Success(Position(geometry.x, geometry.y))
             }
         } catch (exception: Exception) {
             ResultState.Error(exception)

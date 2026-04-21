@@ -1,4 +1,4 @@
-package pl.lipov.malin.ui.main
+package pl.lipov.malin.ui.dashboard
 
 import android.app.Activity
 import android.content.Context
@@ -13,19 +13,39 @@ import kotlinx.coroutines.launch
 import pl.lipov.malin.common.ResultState
 import pl.lipov.malin.common.utils.QrCodeScannerUtils
 import pl.lipov.malin.data.repository.QrRepository
+import pl.lipov.malin.domain.model.Position
+import pl.lipov.malin.domain.repository.QrApi
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-class MainViewModel(
-    private val repository: QrRepository
-) : ViewModel() {
+class DashboardViewModel : ViewModel() {
 
     companion object {
         private const val TAG = "pw.MainViewModel"
     }
 
-    private val _uiState = MutableStateFlow<ResultState<Pair<Double, Double>>?>(null)
-    val uiState: StateFlow<ResultState<Pair<Double, Double>>?> = _uiState
+    private fun provideApi(): QrApi {
+        return Retrofit.Builder()
+            .baseUrl("https://arcgis.cenagis.edu.pl/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(QrApi::class.java)
+    }
+
+    val api = provideApi()
+    val repository = QrRepository(api)
+
+    private val historicalPositions = mutableListOf<Position>()
+    private val _uiState = MutableStateFlow<ResultState<Position>?>(null)
+    val uiState: StateFlow<ResultState<Position>?> = _uiState
 
     private var qrScanningInProgress = false
+
+    fun addHistoricalPosition(
+        position: Position
+    ) {
+        historicalPositions.add(position)
+    }
 
     fun launchGmsQrCodeScanner(
         activity: Activity,

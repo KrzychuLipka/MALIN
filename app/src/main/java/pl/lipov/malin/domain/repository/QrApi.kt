@@ -9,6 +9,6 @@ interface QrApi {
     @GET("server/rest/services/SION2_Geoopisy/sion_topo_qrcode/MapServer/0/query")
     suspend fun getQrData(
         @Query("where") filter: String,
-        @Query("f") format: String = "pjson"
+        @Query("f") format: String = "json"
     ): QrResponseDto
 }
