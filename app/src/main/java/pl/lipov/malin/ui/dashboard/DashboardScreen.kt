@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.journeyapps.barcodescanner.ScanContract
 import org.maplibre.android.geometry.LatLng
 import pl.lipov.malin.common.ResultState
-import pl.lipov.malin.common.utils.cs92ToWgs84
+import pl.lipov.malin.common.utils.transform
 import pl.lipov.malin.domain.model.Position
 import pl.lipov.malin.ui.map.MapScreen
 
@@ -70,7 +70,7 @@ fun DashboardScreen(
                 is ResultState.Success -> {
                     val position: Position = (state as ResultState.Success)
                         .data
-                        .cs92ToWgs84()
+                        .transform()
                     MapScreen(
                         initialLocation = LatLng(position.latitude, position.longitude)
                     )

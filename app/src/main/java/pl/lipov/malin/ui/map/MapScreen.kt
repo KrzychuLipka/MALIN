@@ -14,7 +14,7 @@ import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.maps.MapView
 
-private const val BASE_ZOOM_LEVEL = 10.0
+private const val BASE_ZOOM_LEVEL = 20.0
 private const val MAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
 
 @Composable

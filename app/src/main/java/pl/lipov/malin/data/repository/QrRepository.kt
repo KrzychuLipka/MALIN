@@ -21,7 +21,7 @@ class QrRepository(
             if (geometry == null) {
                 ResultState.Error(Throwable("Geometry not found."))
             } else {
-                ResultState.Success(Position(geometry.x, geometry.y))
+                ResultState.Success(Position(geometry.y, geometry.x))
             }
         } catch (exception: Exception) {
             ResultState.Error(exception)
