@@ -114,7 +114,7 @@ class DashboardViewModel : ViewModel() {
             cancelQrScanning()
             return
         }
-        val qrText = qrContent.substringAfterLast("?qrText=")
+        val qrText = qrContent.substringAfterLast("/")
         fetchPosition(qrText)
     }
 

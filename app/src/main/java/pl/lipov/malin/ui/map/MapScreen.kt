@@ -10,11 +10,13 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import org.maplibre.android.MapLibre
+import org.maplibre.android.annotations.MarkerOptions
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
+import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
 
-private const val BASE_ZOOM_LEVEL = 20.0
+private const val BASE_ZOOM_LEVEL = 18.0
 private const val MAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
 
 @Composable
@@ -88,6 +90,17 @@ private fun MapView.setUp(
                 .zoom(baseZoomLevel)
                 .build()
         map.setStyle(mapStyle)
+        map.addMarker(initialLocation)
     }
     return this
+}
+
+private fun MapLibreMap.addMarker(
+    position: LatLng
+) {
+    val markerOptions = MarkerOptions()
+        .apply {
+            setPosition(position)
+        }
+    addMarker(markerOptions)
 }
