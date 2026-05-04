@@ -17,7 +17,7 @@ import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
 
 private const val BASE_ZOOM_LEVEL = 18.0
-private const val MAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+private const val MAP_STYLE = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
 
 @Composable
 fun MapScreen(
