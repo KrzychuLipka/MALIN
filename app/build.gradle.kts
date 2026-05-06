@@ -37,6 +37,11 @@ android {
     buildFeatures {
         compose = true
     }
+    packaging {
+        resources {
+            excludes += "META-INF/DEPENDENCIES"
+        }
+    }
 }
 
 dependencies {
@@ -54,8 +59,7 @@ dependencies {
     implementation(libs.zxing.android.embedded)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    implementation(libs.maplibre.sdk)
-    implementation(libs.proj4j)
+    implementation(libs.arcgis.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
