@@ -14,7 +14,10 @@ import pl.lipov.malin.domain.model.Position
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    initialPosition: Position
+    initialPosition: Position = Position(
+        485735.38681856263,
+        637298.6457615903
+    )
 ) {
     val mapUtils = remember { EsriMapUtils() }
 

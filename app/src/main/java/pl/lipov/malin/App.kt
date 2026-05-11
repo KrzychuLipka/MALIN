@@ -12,7 +12,7 @@ class App : Application() {
 
     companion object {
         private const val SERVICE_USER_NAME = "ud_app_conn"
-        private const val SERVICE_PASSWORD = "StaryJezNiesieJ4pk@"
+        private const val SERVICE_PASSWORD = "GU$%xPz6r3YyAVB"
     }
 
     private val userCredential = UserCredential(SERVICE_USER_NAME, SERVICE_PASSWORD)

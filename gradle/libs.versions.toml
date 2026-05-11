@@ -15,6 +15,7 @@ kotlin = "2.3.20"
 composeBom = "2026.03.01"
 bluetooth = "1.0.0-alpha02"
 zxingAndroidEmbedded = "4.3.0"
+navigationCompose = "2.9.8"
 
 [libraries]
 android-beacon-library = { module = "org.altbeacon:android-beacon-library", version.ref = "androidBeaconLibrary" }
@@ -38,6 +39,7 @@ androidx-bluetooth = { group = "androidx.bluetooth", name = "bluetooth", version
 play-services-code-scanner = { module = "com.google.android.gms:play-services-code-scanner", version.ref = "playServicesCodeScanner" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

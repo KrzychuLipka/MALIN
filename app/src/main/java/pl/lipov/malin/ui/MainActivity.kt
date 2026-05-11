@@ -1,7 +1,6 @@
 package pl.lipov.malin.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -29,7 +28,6 @@ class MainActivity : ComponentActivity() {
         savedInstanceState: Bundle?
     ) {
         super.onCreate(savedInstanceState)
-        Log.d("LifeCycleTraining", "onCreate")
         enableEdgeToEdge()
         setContent {
             MALINTheme {

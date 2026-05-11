@@ -77,7 +77,7 @@ fun DashboardScreen(
                 }
 
                 null -> {
-                    Text("Brak danych")
+                    MapScreen()
                 }
             }
         }

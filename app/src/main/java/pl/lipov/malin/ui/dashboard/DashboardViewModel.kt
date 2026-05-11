@@ -35,17 +35,10 @@ class DashboardViewModel : ViewModel() {
     val api = provideApi()
     val repository = QrRepository(api)
 
-    private val historicalPositions = mutableListOf<Position>()
     private val _uiState = MutableStateFlow<ResultState<Position>?>(null)
     val uiState: StateFlow<ResultState<Position>?> = _uiState
 
     private var qrScanningInProgress = false
-
-    fun addHistoricalPosition(
-        position: Position
-    ) {
-        historicalPositions.add(position)
-    }
 
     fun launchGmsQrCodeScanner(
         activity: Activity,
