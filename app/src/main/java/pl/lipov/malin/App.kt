@@ -1,40 +1,15 @@
 package pl.lipov.malin
 
 import android.app.Application
-import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
-import com.esri.arcgisruntime.security.AuthenticationChallenge
-import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
-import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
-import com.esri.arcgisruntime.security.AuthenticationManager
-import com.esri.arcgisruntime.security.UserCredential
+import pl.lipov.malin.common.utils.esri.EsriMapUtils
 
 class App : Application() {
 
-    companion object {
-        private const val SERVICE_USER_NAME = "ud_app_conn"
-        private const val SERVICE_PASSWORD = "GU$%xPz6r3YyAVB"
-    }
-
-    private val userCredential = UserCredential(SERVICE_USER_NAME, SERVICE_PASSWORD)
-
     override fun onCreate() {
         super.onCreate()
-        setUpArcGISRuntimeEnvironment()
-    }
-
-    fun setUpArcGISRuntimeEnvironment() {
-        ArcGISRuntimeEnvironment.setLicense(getString(R.string.arc_gis_license))
-        ArcGISRuntimeEnvironment.setApiKey(getString(R.string.maps_api_key))
-        val authenticationChallengeHandler = AuthenticationChallengeHandler {
-            if (it.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE) {
-                AuthenticationChallengeResponse(
-                    AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
-                    userCredential
-                )
-            } else {
-                AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
-            }
-        }
-        AuthenticationManager.setAuthenticationChallengeHandler(authenticationChallengeHandler)
+        EsriMapUtils().setUpArcGISRuntimeEnvironment(
+            license = getString(R.string.arc_gis_license),
+            apiKey = getString(R.string.maps_api_key)
+        )
     }
 }

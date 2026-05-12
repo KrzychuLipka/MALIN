@@ -2,6 +2,7 @@ package pl.lipov.malin.common.utils.esri
 
 import android.content.Context
 import android.util.Log
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment
 import com.esri.arcgisruntime.arcgisservices.LabelDefinition
 import com.esri.arcgisruntime.data.ServiceFeatureTable
 import com.esri.arcgisruntime.geometry.GeometryEngine
@@ -13,6 +14,10 @@ import com.esri.arcgisruntime.mapping.ArcGISMap
 import com.esri.arcgisruntime.mapping.BasemapStyle
 import com.esri.arcgisruntime.mapping.labeling.SimpleLabelExpression
 import com.esri.arcgisruntime.mapping.view.MapView
+import com.esri.arcgisruntime.security.AuthenticationChallenge
+import com.esri.arcgisruntime.security.AuthenticationChallengeHandler
+import com.esri.arcgisruntime.security.AuthenticationChallengeResponse
+import com.esri.arcgisruntime.security.AuthenticationManager
 import com.esri.arcgisruntime.security.UserCredential
 import com.esri.arcgisruntime.symbology.TextSymbol
 import com.esri.arcgisruntime.symbology.UniqueValueRenderer
@@ -24,8 +29,6 @@ class EsriMapUtils {
         private const val SERVICE_USER_NAME = "ud_app_conn"
         private const val SERVICE_PASSWORD = "GU$%xPz6r3YyAVB"
         private const val CENAGIS_ARCGIS_SERVER_URL = "https://arcgis.cenagis.edu.pl"
-        private const val CLUSTERS_API_URL =
-            "${CENAGIS_ARCGIS_SERVER_URL}/server/rest/services/SION2_Topo_MV/sion2_wfs_klastry_budynki/MapServer/1"
         private const val BUILDINGS_API_URL =
             "${CENAGIS_ARCGIS_SERVER_URL}/server/rest/services/SION2_Topo_MV/sion2_topo_indoor_all/MapServer"
         private const val LABELING_QUERY =
@@ -33,6 +36,11 @@ class EsriMapUtils {
 
         private const val OUTDOOR_INSTALLATIONS_URL = "$BUILDINGS_API_URL/6"
         private const val ROOMS_URL = "$BUILDINGS_API_URL/5"
+        private const val WINDOWS_URL = "$BUILDINGS_API_URL/0"
+        private const val STAIRS_INTERNAL_INSTALLATIONS_URL = "$BUILDINGS_API_URL/4"
+        private const val DOORS_URL = "$BUILDINGS_API_URL/1"
+        private const val WALLS_INTERNAL_URL = "$BUILDINGS_API_URL/3"
+        private const val WALLS_EXTERNAL_URL = "$BUILDINGS_API_URL/2"
         const val INITIAL_SCALE = 1500.0
         private const val MAX_SCALE = 100.0
         private const val MIN_SCALE = 1000000.0
@@ -59,68 +67,80 @@ class EsriMapUtils {
     private val userCredential = UserCredential(SERVICE_USER_NAME, SERVICE_PASSWORD)
 
     private val featureLayerUrls: List<String> = listOf(
-        CLUSTERS_API_URL,
+        WALLS_EXTERNAL_URL,
+        WALLS_INTERNAL_URL,
+        DOORS_URL,
+        WINDOWS_URL,
+        ROOMS_URL,
         OUTDOOR_INSTALLATIONS_URL,
-        ROOMS_URL
+        STAIRS_INTERNAL_INSTALLATIONS_URL,
     )
 
     private fun getFeatureLayers() = featureLayerUrls.map { url ->
-
         val featureTable = getServiceFeatureTable(url)
-
         val featureLayer = FeatureLayer(featureTable)
-
+        featureLayer.definitionExpression = getDefinitionExpression(url)
         featureLayer.addDoneLoadingListener {
-
             if (featureLayer.loadStatus == LoadStatus.LOADED) {
-
-                Log.d(
-                    TAG,
-                    "feature table name: ${featureLayer.featureTable.tableName}"
-                )
-
                 if (featureLayer.featureTable.tableName == ServiceLayers.ROOMS.layerName) {
                     featureLayer.isLabelsEnabled = true
                     setLabelDefinition(featureLayer)
                     updateRenderer(featureLayer, CorruptedClassAttrs.EDUCATION)
                     updateRenderer(featureLayer, CorruptedClassAttrs.INDUSTRIAL)
                 }
-
                 setCorruptedLayerSymbology(
                     featureLayer,
                     CorruptedClassAttrs.BUILDING_ENTRANCE_POI.corruptedName
                 )
-
                 setCorruptedLayerSymbology(
                     featureLayer,
                     CorruptedClassAttrs.IMPORTANT_PLACE_POI.corruptedName
                 )
-
                 setCorruptedLayerSymbology(
                     featureLayer,
                     CorruptedClassAttrs.OTHER_PLACE_POI.corruptedName
                 )
-
             } else {
-
                 val error = featureLayer.loadError
-
-                Log.e(
-                    TAG,
-                    $$"""
-                Feature layer failed:
-                code=$${error?.errorCode}
-                message=$${error?.message}
-                cause=${error?.cause}
-                cause=$${error?.cause}
-                additional=$${error?.additionalMessage}
-                url=$$url
-                """.trimIndent()
-                )
+                Log.e(TAG, error?.message ?: "Loading feature error: ${error.errorCode}")
             }
         }
-
         featureLayer
+    }
+
+    private fun getDefinitionExpression(url: String): String? {
+        return when (url) {
+            WALLS_EXTERNAL_URL,
+            WALLS_INTERNAL_URL,
+            OUTDOOR_INSTALLATIONS_URL,
+            WINDOWS_URL,
+            DOORS_URL -> "budynek_id = 39"
+
+            ROOMS_URL,
+            STAIRS_INTERNAL_INSTALLATIONS_URL ->
+                "budynek_id = 39 AND poziom = 1"
+
+            else -> null
+        }
+    }
+
+    fun setUpArcGISRuntimeEnvironment(
+        license: String,
+        apiKey: String
+    ) {
+        ArcGISRuntimeEnvironment.setLicense(license)
+        ArcGISRuntimeEnvironment.setApiKey(apiKey)
+        val authenticationChallengeHandler = AuthenticationChallengeHandler {
+            if (it.type == AuthenticationChallenge.Type.USER_CREDENTIAL_CHALLENGE) {
+                AuthenticationChallengeResponse(
+                    AuthenticationChallengeResponse.Action.CONTINUE_WITH_CREDENTIAL,
+                    userCredential
+                )
+            } else {
+                AuthenticationChallengeResponse(AuthenticationChallengeResponse.Action.CANCEL, null)
+            }
+        }
+        AuthenticationManager.setAuthenticationChallengeHandler(authenticationChallengeHandler)
     }
 
     fun createMapView(
