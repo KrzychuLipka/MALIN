@@ -16,6 +16,7 @@ import pl.lipov.malin.ui.theme.MALINTheme
 
 class MainActivity : ComponentActivity() {
 
+
     private val viewModel: DashboardViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {

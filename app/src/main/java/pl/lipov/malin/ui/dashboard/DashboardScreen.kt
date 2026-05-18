@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.journeyapps.barcodescanner.ScanContract
 import pl.lipov.malin.common.ResultState
-import pl.lipov.malin.domain.model.Position
 import pl.lipov.malin.ui.map.MapScreen
 
 @Composable
@@ -66,9 +65,9 @@ fun DashboardScreen(
                 }
 
                 is ResultState.Success -> {
-                    val position: Position = (state as ResultState.Success).data
                     MapScreen(
-                        initialPosition = Position(position.latitude, position.longitude)
+                        initialPosition = (state as ResultState.Success).data,
+                        showMarker = true
                     )
                 }
 
